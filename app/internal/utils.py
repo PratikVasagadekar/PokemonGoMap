@@ -266,32 +266,35 @@ class parseRaidsData:
                 self.fetchPokemonMoves()
                 #* Parse and Merge Raids, Weather and Moves Data
                 self.ParseRaidsWeatherMovesData()
-                #* Update Spawn Timings
-                self.UpdateTimeStamps()
-                self.UpdateSpawnTimings()
-                #* Update Pokemon ID
-                self.updatePokemonName()
-                #* Update Google Maps Links
-                self.dfRaids = self.getGoogleMapLinks()
-                #* Replace Team Numbers with Names
-                self.dfRaids['team'] = self.dfRaids['team'].replace({0: 'NoTeam', 1: 'Mystic', 2: 'Valor', 3: 'Instinct'}).fillna('Undefined')
-                #* Split Types Column
-                self.dfRaids = self.splitTypesColumn()
-                #* Update Pokemon Images
-                self.dfRaids = self.UpdatePokemonImages()
-                #* Update Weather Conditions and Boosted Status
-                self.dfRaids = self.UpdateWeatherSettings()
-                #* Update Raid Level Settings
-                self.dfRaids = self.UpdateRaidLevelSettings()
 
-                #* Drop Unwanted Columns
-                self.dfRaids = self.DropColumns(self.dfRaids,['cell_id','ex_raid_eligible','sponsor','move1','move2'])
-                #* Replace Gender with Names
-                self.dfRaids['gender'] = self.dfRaids['gender'].replace({1: 'Male', 2: 'Female', 3: 'Genderless'}).fillna('Undefined')
-                #* Rearrange the Columns
-                self.dfRaids = self.dfRaids[['Name','Pokemon Image','Primary Type','gym_name', 'lat', 'lng','Weather Boost', 'raid_spawn', 'raid_start', 'raid_end', 'remaining_time_formatted','pokemon_id', 'level', 'cp' ,'Pokemon Team', 'weather','Boosted', 'Move 1 Name', 'Move 2 Name','Google Maps Link']]
-                #* Sort by CP   
-                self.dfRaids = self.dfRaids.sort_values(by='cp', ascending=False) 
+                #* The reason this would happen, is if you check that at start time of eggs.
+                if not self.dfRaids.empty:
+                    #* Update Spawn Timings
+                    self.UpdateTimeStamps()
+                    self.UpdateSpawnTimings()
+                    #* Update Pokemon ID
+                    self.updatePokemonName()
+                    #* Update Google Maps Links
+                    self.dfRaids = self.getGoogleMapLinks()
+                    #* Replace Team Numbers with Names
+                    self.dfRaids['team'] = self.dfRaids['team'].replace({0: 'NoTeam', 1: 'Mystic', 2: 'Valor', 3: 'Instinct'}).fillna('Undefined')
+                    #* Split Types Column
+                    self.dfRaids = self.splitTypesColumn()
+                    #* Update Pokemon Images
+                    self.dfRaids = self.UpdatePokemonImages()
+                    #* Update Weather Conditions and Boosted Status
+                    self.dfRaids = self.UpdateWeatherSettings()
+                    #* Update Raid Level Settings
+                    self.dfRaids = self.UpdateRaidLevelSettings()
+
+                    #* Drop Unwanted Columns
+                    self.dfRaids = self.DropColumns(self.dfRaids,['cell_id','ex_raid_eligible','sponsor','move1','move2'])
+                    #* Replace Gender with Names
+                    self.dfRaids['gender'] = self.dfRaids['gender'].replace({1: 'Male', 2: 'Female', 3: 'Genderless'}).fillna('Undefined')
+                    #* Rearrange the Columns
+                    self.dfRaids = self.dfRaids[['Name','Pokemon Image','Primary Type','gym_name', 'lat', 'lng','Weather Boost', 'raid_spawn', 'raid_start', 'raid_end', 'remaining_time_formatted','pokemon_id', 'level', 'cp' ,'Pokemon Team', 'weather','Boosted', 'Move 1 Name', 'Move 2 Name','Google Maps Link']]
+                    #* Sort by CP   
+                    self.dfRaids = self.dfRaids.sort_values(by='cp', ascending=False) 
                 
             #* Convert to JSON Object
             self.jsonRaidsData = json.loads(self.dfRaids.to_json(orient='records'))
