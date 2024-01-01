@@ -297,12 +297,11 @@ class parseRaidsData:
                     self.dfRaids = self.dfRaids[['Name','Pokemon Image','Primary Type','gym_name', 'lat', 'lng','Weather Boost', 'raid_spawn', 'raid_start', 'raid_end', 'remaining_time_formatted','pokemon_id', 'level', 'cp' ,'Pokemon Team', 'weather','Boosted', 'Move 1 Name', 'Move 2 Name','Google Maps Link']]
                     #* Sort by CP   
                     self.dfRaids = self.dfRaids.sort_values(by='cp', ascending=False) 
+                    self.dfRaids = self.dfRaids.reset_index(drop=True)
                 
             #* Convert to JSON Object
             self.jsonRaidsData = json.loads(self.dfRaids.to_json(orient='records'))
             
-            self.dfRaids.to_csv('dfRaids.csv')
-                
             return self.jsonRaidsData
         except requests.exceptions.RequestException as err:
             print(f"An error occurred: {err}")
