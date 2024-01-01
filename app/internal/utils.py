@@ -245,7 +245,7 @@ class parseRaidsData:
         self.dfRaids['weather'] = self.dfRaids['weather'].map(weather_conditions).fillna('')
         #* Add Boosted Condition
         self.dfRaids['Boosted'] = self.dfRaids.apply(
-    lambda row: "Boosted" if any(val in row['weather'] for val in row['Weather Boost'].split(',')) and row['weather'] != "" else "Regular",
+    lambda row: "Boosted" if any(val.strip() in row['weather'] for val in row['Weather Boost'].split(',')) and row['weather'] != "" else "Regular",
     axis=1)
 
         return self.dfRaids
@@ -304,6 +304,8 @@ class parseRaidsData:
                 
             #* Convert to JSON Object
             self.jsonRaidsData = json.loads(self.dfRaids.to_json(orient='records'))
+
+            self.dfRaids.to_csv('./123.csv')
             
             return self.jsonRaidsData
         except requests.exceptions.RequestException as err:
