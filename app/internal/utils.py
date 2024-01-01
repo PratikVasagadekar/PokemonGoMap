@@ -202,20 +202,22 @@ class parseRaidsData:
 
 
     def UpdateSpawnTimings(self):
-        now = datetime.now()
-        current_time = datetime.strptime(now.strftime("%I:%M:%S %p"), "%I:%M:%S %p")
-        raid_end_time = pd.to_datetime(self.dfRaids['raid_end'], format="%I:%M:%S %p")
-        raid_start_time = pd.to_datetime(self.dfRaids['raid_start'], format="%I:%M:%S %p")
+        tz = pytz.timezone('Asia/Kolkata')
+        now = datetime.now(tz)
+        current_time = datetime.strptime(now.strftime("%I:%M:%S %p"), "%I:%M:%S %p").replace(tzinfo=tz)
+        raid_end_time = pd.to_datetime(self.dfRaids['raid_end'], format="%I:%M:%S %p").dt.tz_localize(tz)
+        raid_start_time = pd.to_datetime(self.dfRaids['raid_start'], format="%I:%M:%S %p").dt.tz_localize(tz)
         
         self.dfRaids['remaining_time'] = (raid_end_time - current_time).dt.total_seconds().astype(int)
         self.dfRaids['remaining_time_formatted'] = [
             'Expired' if rt <= 0 else 
             'Yet to Start' if rs > current_time else 
-            f'{rt // 60:02d}:{rt % 60:02d}' 
+            f'{int(rt) // 60:02d}:{int(rt) % 60:02d}'  # Ensure rt is integer for calculations
             for rt, rs in zip(self.dfRaids['remaining_time'], raid_start_time)
         ]
 
         return self.dfRaids[['raid_spawn', 'raid_start', 'raid_end', 'remaining_time_formatted']]
+
 
     def updatePokemonName(self):
         df = pd.read_excel('app/internal/Data/Pokemon Stats.xlsx').drop_duplicates('National Dex')
@@ -298,7 +300,8 @@ class parseRaidsData:
                 
             #* Convert to JSON Object
             self.jsonRaidsData = json.loads(self.dfRaids.to_json(orient='records'))
-                
+            
+            self.dfRaids.to_csv('dfRaids.csv')
                 
             return self.jsonRaidsData
         except requests.exceptions.RequestException as err:

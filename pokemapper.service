@@ -1,0 +1,13 @@
+[Unit]
+Description=Pokemon Go Mapper
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/root/PokeMapper/PokemonGoMap
+ExecStart=/usr/local/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
