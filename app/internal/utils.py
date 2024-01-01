@@ -244,7 +244,8 @@ class parseRaidsData:
         weather_conditions = {7: "Fog", 6: "Snow", 5: "Windy", 4: "Cloudy", 3: "Partly Cloudy", 2: "Rainy", 1: "Clear"}
         self.dfRaids['weather'] = self.dfRaids['weather'].map(weather_conditions).fillna('')
         #* Add Boosted Condition
-        self.dfRaids['Boosted'] = self.dfRaids.apply(lambda row: "Boosted" if any(w in row['Weather Boost'] for w in row['weather'].split(',')) and row['weather'] else "Regular", axis=1)
+        self.dfRaids['Boosted'] = self.dfRaids.apply(lambda row: "Boosted" if any(wb in row['weather'].split(', ') for wb in row['Weather Boost'].split(', ')) and row['weather'] else "Regular", axis=1)
+
         return self.dfRaids
           
     def UpdateRaidLevelSettings(self):
