@@ -5,7 +5,7 @@ import requests
 import json
 import time
 import pytz
-
+from urllib.parse import quote
 
 class parseMapData:
 
@@ -92,7 +92,7 @@ class parseMapData:
         return self.dfMapData
 
     def UpdatePokemonImages(self):
-        self.dfMapData['Pokemon Image'] = self.dfMapData.apply(lambda row: f"https://raw.githubusercontent.com/PratikVasagadekar/PokemonGoAssets/main/Images/{row['Name']}.png", axis=1)
+        self.dfRaids['Pokemon Image'] = self.dfRaids['Name'].apply(lambda x: f"https://raw.githubusercontent.com/PratikVasagadekar/PokemonGoAssets/main/Images/{quote(x)}.png")
         self.dfMapData['Primary Type'] = self.dfMapData.apply(lambda row: f"https://raw.githubusercontent.com/PratikVasagadekar/PokemonGoAssets/main/Types/{row['Primary Type']}.png", axis=1)
         self.dfMapData['Secondary Type'] = self.dfMapData.apply(lambda row: None if row['Secondary Type'] is None else f"https://raw.githubusercontent.com/PratikVasagadekar/PokemonGoAssets/main/Types/{row['Secondary Type']}.png", axis=1)
         return self.dfMapData
