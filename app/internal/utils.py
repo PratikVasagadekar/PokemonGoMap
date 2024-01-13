@@ -132,6 +132,7 @@ class parseMapData:
         self.dfMapData = self.dfMapData.sort_values(by='cp', ascending=False) 
         #* Convert to JSON Object
         self.jsonMapData = json.loads(self.dfMapData.to_json(orient='records'))
+
         return self.jsonMapData
 
 
@@ -229,7 +230,7 @@ class parseRaidsData:
         return self.dfRaids
 
     def UpdatePokemonImages(self):
-        self.dfRaids['Pokemon Image'] = self.dfRaids.apply(lambda row: f"https://raw.githubusercontent.com/PratikVasagadekar/PokemonGoAssets/main/Images/{row['Name']}.png", axis=1)
+        self.dfRaids['Pokemon Image'] = self.dfRaids['Name'].apply(lambda x: f"https://raw.githubusercontent.com/PratikVasagadekar/PokemonGoAssets/main/Images/{quote(x)}.png")
         self.dfRaids['Pokemon Team'] = self.dfRaids.apply(lambda row: f"https://raw.githubusercontent.com/PratikVasagadekar/PokemonGoAssets/main/Teams/{row['team']}.png", axis=1)
         self.dfRaids['Primary Type'] = self.dfRaids.apply(lambda row: f"https://raw.githubusercontent.com/PratikVasagadekar/PokemonGoAssets/main/Types/{row['Primary Type']}.png", axis=1)
         return self.dfRaids
@@ -305,8 +306,6 @@ class parseRaidsData:
             #* Convert to JSON Object
             self.jsonRaidsData = json.loads(self.dfRaids.to_json(orient='records'))
 
-            self.dfRaids.to_csv('./123.csv')
-            
             return self.jsonRaidsData
         except requests.exceptions.RequestException as err:
             print(f"An error occurred: {err}")
