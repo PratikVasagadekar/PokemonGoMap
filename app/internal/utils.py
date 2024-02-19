@@ -127,7 +127,7 @@ class parseMapData:
             'Level', 'CP Multiplier', 'stardust cost', 'sd', 'xl','despawn','Image URL'
         ])
         #* Rearrange the Columns
-        self.dfMapData = self.ReArrangeCols(self.dfMapData, ['cp','level','IV','Name','Pokemon Image','Primary Type', 'Secondary Type','Image','MAX CP (IV)','shiny','Remaining Time','Google Maps','Collection Status','Google Maps Link','lat','lng'])
+        self.dfMapData = self.ReArrangeCols(self.dfMapData, ['cp','level','IV','Name','Pokemon Image','Primary Type', 'Secondary Type','Image','MAX CP (IV)','shiny','Remaining Time','Google Maps','Collection Status','Google Maps Link','lat','lng','Region'])
         #* Sort by CP   
         self.dfMapData = self.dfMapData.sort_values(by='cp', ascending=False) 
         #* Convert to JSON Object
